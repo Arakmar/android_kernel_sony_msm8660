@@ -26,6 +26,8 @@
 
 #include <net/netfilter/nf_conntrack_tuple.h>
 
+#pragma GCC diagnostic ignored "-Waddress"
+
 /* per conntrack: protocol private data */
 union nf_conntrack_proto {
 	/* insert conntrack proto private data here */

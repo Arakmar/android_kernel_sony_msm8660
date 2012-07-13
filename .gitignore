@@ -87,3 +87,4 @@ GTAGS
 
 *.diff
 *initramfs.cpio*
+arch/arm/boot/*
