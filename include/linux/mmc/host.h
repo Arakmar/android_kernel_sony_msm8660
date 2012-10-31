@@ -417,9 +417,15 @@ extern int mmc_cache_ctrl(struct mmc_host *, u8);
 
 static inline void mmc_signal_sdio_irq(struct mmc_host *host)
 {
+#ifdef CONFIG_MACH_SDCC_BCM_DRIVER
+	if (host->sdio_irq_thread) {
+#endif
 	host->ops->enable_sdio_irq(host, 0);
 	host->sdio_irq_pending = true;
 	wake_up_process(host->sdio_irq_thread);
+#ifdef CONFIG_MACH_SDCC_BCM_DRIVER
+	}
+#endif
 }
 
 struct regulator;
