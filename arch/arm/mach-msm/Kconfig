@@ -605,12 +605,33 @@ config MACH_SEMC_NOZOMI_DCM
         help
           Support for the Sony Ericsson Nozomi_dcm.
 
+config MACH_SEMC_NOZOMI2
+	depends on ARCH_MSM8X60
+	default n
+	bool "SEMC Nozomi2"
+	help
+	  Support for the Sony Ericsson Nozomi2.
+
 config MACH_SEMC_HIKARI
 	depends on ARCH_MSM8X60
 	default n
 	bool "SEMC Hikari"
 	help
 	  Support for the Sony Ericsson Hikari.
+
+config MACH_SEMC_HIKARI_ROW
+        depends on ARCH_MSM8X60
+        default n
+        bool "SEMC Hikari_row"
+        help
+          Support for the Sony Ericsson Hikari_row.
+
+config MACH_SEMC_AOBA
+	depends on ARCH_MSM8X60
+	default n
+	bool "SEMC Aoba"
+	help
+	  Support for the Sony Ericsson Aoba.
 
 config MACH_SEMC_HAYATE
 	depends on ARCH_MSM8X60
@@ -1120,7 +1141,7 @@ config MSM_SMD_DEBUG
 	  between the ARM9 and ARM11
 
 config MSM_SDIO_AL
-	depends on ((ARCH_MSM7X30 || MACH_MSM8X60_FUSN_FFA || MACH_TYPE_MSM8X60_FUSION) && HAS_WAKELOCK)
+	depends on ((ARCH_MSM7X30 || MACH_MSM8X60_FUSN_FFA || MACH_TYPE_MSM8X60_FUSION || MACH_SEMC_AOBA) && HAS_WAKELOCK)
 	default y
 	tristate "SDIO-Abstraction-Layer"
 	help

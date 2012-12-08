@@ -1,4 +1,4 @@
-/* arch/arm/mach-msm/keypad-fuji_nozomi.c
+/* arch/arm/mach-msm/keypad-fuji_aoba.c
  *
  * Copyright (C) [2011] Sony Ericsson Mobile Communications AB.
  *
@@ -19,8 +19,8 @@
 #endif /* CONFIG_FUJI_GPIO_KEYPAD */
 
 static const unsigned int fuji_keymap[] = {
-	KEY(1, 0, KEY_CAMERA_FOCUS),
-	KEY(1, 1, KEY_CAMERA),
+	KEY(1, 0, KEY_CAMERA),
+	KEY(1, 1, KEY_CAMERA_FOCUS),
 };
 
 static struct matrix_keymap_data fuji_keymap_data = {
@@ -88,7 +88,6 @@ static struct gpio_event_input_info gpio_key_gpio_info = {
 	.keymap = gpio_key_gpio_map,
 	.keymap_size = ARRAY_SIZE(gpio_key_gpio_map),
 	.debounce_time.tv64 = 10 * NSEC_PER_MSEC,
-	.info.no_suspend = true,
 };
 
 static struct gpio_event_direct_entry gpio_sw_gpio_map[] = {
@@ -102,7 +101,6 @@ static struct gpio_event_input_info gpio_sw_gpio_info = {
 	.keymap = gpio_sw_gpio_map,
 	.keymap_size = ARRAY_SIZE(gpio_sw_gpio_map),
 	.debounce_time.tv64 = 100 * NSEC_PER_MSEC,
-	.info.no_suspend = true,
 };
 
 static struct gpio_event_info *gpio_key_info[] = {

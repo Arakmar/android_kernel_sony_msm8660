@@ -4,9 +4,15 @@ ifdef CONFIG_MACH_SEMC_NOZOMI
 obj-y += board-semc_fuji-audio.o
 else ifdef CONFIG_MACH_SEMC_NOZOMI_DCM
 obj-y += board-semc_fuji-audio.o
+else ifdef CONFIG_MACH_SEMC_NOZOMI2
+obj-y += board-semc_fuji-audio.o
 else ifdef CONFIG_MACH_SEMC_HIKARI
 obj-y += board-semc_fuji-audio.o
+else ifdef CONFIG_MACH_SEMC_HIKARI_ROW
+obj-y += board-semc_fuji-audio.o
 else ifdef CONFIG_MACH_SEMC_HAYATE
+obj-y += board-semc_fuji-audio.o
+else ifdef CONFIG_MACH_SEMC_AOBA
 obj-y += board-semc_fuji-audio.o
 else
 obj-y += board-msm8x60-audio.o

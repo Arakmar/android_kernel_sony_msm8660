@@ -1212,9 +1212,9 @@ kgsl_ioctl_sharedmem_from_vmalloc(struct kgsl_device_private *dev_priv,
 
 	vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
 
-	result = remap_vmalloc_range(vma, (void *) entry->memdesc.hostptr, 0);
+	result = kgsl_sharedmem_map_vma(vma, &entry->memdesc);
 	if (result) {
-		KGSL_CORE_ERR("remap_vmalloc_range failed: %d\n", result);
+		KGSL_CORE_ERR("kgsl_sharedmem_map_vma failed: %d\n", result);
 		goto error_free_vmalloc;
 	}
 
@@ -1353,7 +1353,8 @@ static int memdesc_sg_virt(struct kgsl_memdesc *memdesc,
 	int sglen = PAGE_ALIGN(size) / PAGE_SIZE;
 	unsigned long paddr = (unsigned long) addr;
 
-	memdesc->sg = vmalloc(sglen * sizeof(struct scatterlist));
+	memdesc->sg = kgsl_sg_alloc(sglen);
+
 	if (memdesc->sg == NULL)
 		return -ENOMEM;
 
@@ -1393,7 +1394,7 @@ static int memdesc_sg_virt(struct kgsl_memdesc *memdesc,
 
 err:
 	spin_unlock(&current->mm->page_table_lock);
-	vfree(memdesc->sg);
+	kgsl_sg_free(memdesc->sg,  sglen);
 	memdesc->sg = NULL;
 
 	return -EINVAL;

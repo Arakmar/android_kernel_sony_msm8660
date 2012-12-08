@@ -3657,6 +3657,11 @@ static void pmic8058_xoadc_mpp_config(void)
 							AOUT_CTRL_DISABLE),
 		PM8901_MPP_INIT(XOADC_MPP_4, D_OUTPUT, PM8901_MPP_DIG_LEVEL_S4,
 							DOUT_CTRL_LOW),
+		PM8901_MPP_INIT(XOADC_MPP_2, D_INPUT,
+				PM8901_MPP_DIG_LEVEL_MSMIO, DIN_TO_INT),
+		PM8901_MPP_INIT(XOADC_MPP_3, D_INPUT,
+				PM8901_MPP_DIG_LEVEL_MSMIO, DIN_TO_INT),
+
 	};
 
 	for (i = 0; i < ARRAY_SIZE(xoadc_mpps); i++) {
@@ -3969,6 +3974,12 @@ static struct platform_device *fuji_devices[] __initdata = {
 #endif
 #ifdef CONFIG_USB_GADGET_MSM_72K
 	&msm_device_gadget_peripheral,
+#endif
+#if defined(CONFIG_MACH_SEMC_AOBA)
+	&msm_charm_modem,
+#ifdef CONFIG_MSM_SDIO_AL
+	&msm_device_sdio_al,
+#endif
 #endif
 #ifdef CONFIG_USB_G_ANDROID
 	&android_usb_device,
@@ -4307,7 +4318,7 @@ static void __init msm8x60_calculate_reserve_sizes(void)
 
 static int msm8x60_paddr_to_memtype(unsigned int paddr)
 {
-	if (paddr >= 0x40000000 && paddr < 0x60000000)
+	if (paddr >= 0x40000000 && paddr < 0x80000000)
 		return MEMTYPE_EBI1;
 	if (paddr >= 0x38000000 && paddr < 0x40000000)
 		return MEMTYPE_SMI;
@@ -4501,7 +4512,7 @@ static int pm8058_gpios_init(void)
 			{
 				.direction	= PM_GPIO_DIR_OUT,
 				.pull		= PM_GPIO_PULL_NO,
-#if defined(CONFIG_MACH_SEMC_NOZOMI)
+#if defined(CONFIG_MACH_SEMC_NOZOMI) || defined(CONFIG_MACH_SEMC_HIKARI_ROW)
 				.output_buffer  = PM_GPIO_OUT_BUF_OPEN_DRAIN,
 				.vin_sel	= PM8058_GPIO_VIN_VPH,
 #else
@@ -5545,6 +5556,10 @@ static void __init msm8x60_init_buses(void)
 	msm_gsbi8_qup_i2c_device.dev.platform_data = &msm_gsbi8_qup_i2c_pdata;
 	msm_gsbi9_qup_i2c_device.dev.platform_data = &msm_gsbi9_qup_i2c_pdata;
 	msm_gsbi12_qup_i2c_device.dev.platform_data = &msm_gsbi12_qup_i2c_pdata;
+#ifdef CONFIG_MSM_GSBI9_UART
+	if (machine_is_semc_aoba())
+		msm_gsbi9_qup_i2c_pdata.use_gsbi_shared_mode = 1;
+#endif
 #endif
 #if defined(CONFIG_SPI_QUP) || defined(CONFIG_SPI_QUP_MODULE)
 	msm_gsbi1_qup_spi_device.dev.platform_data = &msm_gsbi1_qup_spi_pdata;
@@ -5576,6 +5591,14 @@ static void __init msm8x60_init_buses(void)
 #ifdef CONFIG_SERIAL_MSM_HS
 	msm_uart_dm1_pdata.wakeup_irq = gpio_to_irq(54); /* GSBI6(2) */
 	msm_device_uart_dm1.dev.platform_data = &msm_uart_dm1_pdata;
+#endif
+#ifdef CONFIG_MSM_GSBI9_UART
+	if (machine_is_semc_aoba()) {
+		msm_device_uart_gsbi9 = msm_add_gsbi9_uart();
+		if (IS_ERR(msm_device_uart_gsbi9))
+			pr_err("%s(): Failed to create uart gsbi9 device\n",
+				__func__);
+	}
 #endif
 #ifdef CONFIG_MSM_GSBI5_UART
 	msm_device_uart_gsbi5.dev.platform_data = &msm_uart_gsbi5_pdata;
